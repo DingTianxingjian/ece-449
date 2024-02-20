@@ -128,3 +128,98 @@ For \( t=1 \), all weights are initialized to \( 1/6 \) because there are 6 data
 
 1. **Repeat the process** with the updated weights from iteration 1.
 
+
+
+
+
+#### Problem 4
+
+##### 1. Generalization Bound
+
+Given:
+- True error rate \( $R(h) = p$ \)
+- Empirical error rate \( $\hat{R}_S(h) = \hat{p}$ \)
+- Confidence level \( $\delta = 0.05$ \) 
+- Accuracy requirement \( $\epsilon = 0.05$ \)
+
+The Hoeffding Inequality states: $P(|\hat{p} - p| > \epsilon) \leq 2e^{-2n\epsilon^2}$ 
+
+to ensure \( $P(|\hat{p} - p| > \epsilon) \leq \delta$ \), so we set: $2e^{-2n\epsilon^2} \leq \delta $
+
+Solving for \( n \), the number of samples, gives us: $n \geq \frac{\log(2/\delta)}{2\epsilon^2} $
+
+n >= 738
+
+##### 2. VC Dimensions
+
+(a) 
+
+For the 1D affine classifier,  $F_{\text{affine}} = \{1\{wx + w_0 \geq 0\} : X \rightarrow R | w, w_0 \in R\} $, _
+
+we need to find the VC dimension $V_C(F{\text{affine}}) $
+
+**Proof Strategy:**
+
+- **Shattering 1 point:** It's straightforward to see that any single point in \( $R$ \) can be shattered by choosing appropriate values of \( $w$ \) and \( $w_0$ \). For example, for a point \( $x_1$ \), we can choose \( w \) and \( w_0 \) such that \( $wx_1 + w_0 \geq 0$ \) for the label 1, and \( $wx_1 + w_0 < 0$ \) for the label 0.
+- **Shattering 2 points:** For two distinct points \( $x_1$ \) and \( $x_2$ \), we can find \( $w$ \) and \( $w_0$ \) that correctly classify any labeling of these points. This can be done by positioning the decision boundary (the point where \( $wx + w_0 = 0$ \)) between \( $x_1$ \) and \( $x_2$ \) for different labelings.
+- **Failure at 3 points:** To show that 3 points cannot be shattered, consider three points  $x_1 < x_2 < x_3 $ and a labeling that requires \( x_1 \) and \( x_3 \) to be classified as 1 while \( x_2 \) as 0. No single line (affine function) can separate \( x_2 \) from \( x_1 \) and \( x_3 \) in this way.
+
+Hence, \( $V_C(F_{\text{affine}}) = 2$ \).
+
+ (b) 
+
+For a general affine classifier in \( k \) dimensions, $ F^k_{\text{affine}} = \{1\{w^Tx + w_0 \geq 0\} : X \rightarrow R^k | w \in R^k, w_0 \in R\} $, 
+
+the VC dimension is related to the number of parameters defining the decision boundary, which is \( k + 1 \) (including  $w_0$ ).
+
+**Proof Strategy:**
+
+##### Shattering \( k \) Points
+
+Let's consider \( k \) points in \( $\mathbb{R}^k$ \). We want to show that for any labeling of these points, there exists a hyperplane defined by \( w \) and \( w_0 \) that can separate the points according to their labels.
+
+1. **Choice of Points**: Choose k  points in  $\mathbb{R}^k$  such that they are linearly independent. A simple way to ensure linear independence is to choose points that lie along the axes of  $\mathbb{R}^k$ ,
+
+2. **Labeling**: Consider an arbitrary labeling of these points. Each point  $x_i$  is assigned a label  $y_i$  where $y_i \in \{+1, -1\}$ .
+
+3. **Constructing the Hyperplane**: We need to find $w$ and  $w_0$ such that for each \( i \), $sign(w^Tx_i + w_0) = y_i$ . This can be written as a system of linear inequalities:
+   $w^Tx_i + w_0 > 0, \text{ if } y_i = +1 $
+   $w^Tx_i + w_0 < 0, \text{ if } y_i = -1$
+
+4. **Solving for \( w \) and \( w_0 \)**: Since the points $x_i$ are linearly independent, the system of equations (or inequalities) has a solution. This is a consequence of the properties of linearly independent vectors and the capability of a hyperplane to separate them in $\mathbb{R}^k$.
+
+##### Failure at \( k + 1 \) Points
+
+Now, let's prove that \( k + 1 \) points in \( $\mathbb{R}^k$ \) cannot be shattered by such classifiers.
+
+1. **Choosing \( k + 1 \) Points**: In \( $\mathbb{R}^k$ \), choose \( k + 1 \) points. Unlike the case with \( k \) points, these \( k + 1 \) points must be linearly dependent since there are more points than dimensions.
+
+2. **Pigeonhole Principle**: The pigeonhole principle suggests that with \( k + 1 \) points and \( k \) dimensions, there must be some redundancy or dependency among the points, implying that they cannot all be separated linearly by a hyperplane.
+
+3. **Configuration of Labels**: Consider a configuration where the points are labeled in such a way that the point which is a linear combination of the others has a different label from the rest. Due to the linear dependency, there's no hyperplane that can separate this point from the others while correctly classifying all points.
+
+No hyperplane can correctly classify \( x_{k+1} \) without misclassifying at least one of the other points, due to the linear dependence.
+
+This demonstrates that for any set of \( k + 1 \) points in  $\mathbb{R}^k$ , there exists a labeling configuration that cannot be separated by a hyperplane, proving that k + 1 points cannot be shattered and thereby establishing the VC dimension of general affine classifiers in $\mathbb{R}^k$  as  k .
+
+Therefore, \( $V_C(F^k_{\text{affine}}) = k + 1$ \).
+
+(c)
+
+Only 1
+
+##### Shattering 1 points:
+
+You can always find c to shatter
+
+##### Shattering 2 points:
+
+let $x_1 = -x_2$
+
+Therefore,
+
+$\cos(cx_1) = \cos(cx_2)$
+
+and $x_1$, $x_2$ cannot be seperated.
+
+$V_C(F_{\text{cos}}) =  1$ 
